@@ -1,7 +1,6 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-// icons
 import {
   ArrowLeftRight,
   ChartColumn,
@@ -12,7 +11,6 @@ import {
   X,
 } from "lucide-react";
 
-// react
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 

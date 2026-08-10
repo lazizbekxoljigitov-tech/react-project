@@ -1,53 +1,47 @@
-import { ArrowDownRight, ArrowUpRight, Calendar, Eye } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import apiClient from "../../hooks/useAxios";
+import { ArrowDownRight, ArrowUpRight, Calendar, Eye } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import apiClient from '../../hooks/useAxios'
 
 function Dashboard() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([])
 
   async function getApi() {
     try {
-      const { data } = await apiClient.get("/harajat");
-      setData(data);
+      const { data } = await apiClient.get('/harajat')
+      setData(data)
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
   }
-
   useEffect(() => {
-    getApi();
-  }, []);
-
+    getApi()
+  }, [])
   const result = data.reduce(
     (acc, item) => {
-      if (item.type === "income") {
-        acc.income += Number(item.amount);
-      } else if (item.type === "expense") {
-        acc.expense += Number(item.amount);
+      if (item.type === 'income') {
+        acc.income += Number(item.amount)
+      } else if (item.type === 'expense') {
+        acc.expense += Number(item.amount)
       }
 
-      return acc;
+      return acc
     },
     {
       income: 0,
       expense: 0,
-    },
-  );
+    }
+  )
 
-  console.log(result.income);
-  console.log(result.expense);
-  const limit = 1000000;
+  console.log(result.income)
+  console.log(result.expense)
+  const limit = 1000000
 
   const categories = [
-    ...new Set(
-      data
-        .filter((item) => item.type === "expense")
-        .map((item) => item.category),
-    ),
-  ];
+    ...new Set(data.filter((item) => item.type === 'expense').map((item) => item.category)),
+  ]
 
-  const total = data.reduce((sum, item) => sum + Number(item.amount), 0);
+  const total = data.reduce((sum, item) => sum + Number(item.amount), 0)
 
   return (
     <>
@@ -55,9 +49,7 @@ function Dashboard() {
         <div className="flex justify-between items-end">
           <div className="flex flex-col">
             <h2 className="font-bold text-[25px]">Dashboard</h2>
-            <p className="font-medium text-gray-400 font-sans">
-              Xarajatlaringizni boshqaring
-            </p>
+            <p className="font-medium text-gray-400 font-sans">Xarajatlaringizni boshqaring</p>
           </div>
           <div className="data">
             <h1 className="flex gap-[5px]">
@@ -77,18 +69,14 @@ function Dashboard() {
           <div className="w-full border border-gray-900 flex grow rounded-xl p-[10px]">
             <div className="flex flex-col">
               <p>Daromat</p>
-              <p className="text-[30px] font-bold text-green-500">
-                {result.income}
-              </p>
+              <p className="text-[30px] font-bold text-green-500">{result.income}</p>
               <p className="text-gray-600 font-medium">Ushbu Oy</p>
             </div>
           </div>
           <div className="w-full border border-gray-900 flex grow rounded-xl p-[10px]">
             <div className="flex flex-col">
               <p>Harajat</p>
-              <p className="text-[30px] font-bold text-red-500">
-                {result.expense}
-              </p>
+              <p className="text-[30px] font-bold text-red-500">{result.expense}</p>
               <p className="text-gray-600 font-medium">Ushbu Oy</p>
             </div>
           </div>
@@ -101,10 +89,7 @@ function Dashboard() {
                 <p className="text-[27px]">So'nggi tranzaksiyalar</p>
               </div>
               <div className="flex flex-col">
-                <Link
-                  to={"/otkazma"}
-                  className="text-[19px] flex items-center gap-[7bpx]"
-                >
+                <Link to={'/otkazma'} className="text-[19px] flex items-center gap-[7bpx]">
                   <Eye /> Barchasni Ko'rish
                 </Link>
               </div>
@@ -112,13 +97,10 @@ function Dashboard() {
 
             <div className="overflow-y-auto  h-[300px] scrollbar-none">
               {data.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex justify-between items-center py-3 p-[20px]"
-                >
+                <div key={item.id} className="flex justify-between items-center py-3 p-[20px]">
                   <div className="flex gap-[10px]">
                     <div className="">
-                      {item.type == "expense" ? (
+                      {item.type == 'expense' ? (
                         <ArrowUpRight
                           className=" p-[10px] bg-red-200 rounded-[50%] text-red-500 "
                           size={50}
@@ -140,12 +122,10 @@ function Dashboard() {
                   <div className="text-right">
                     <h2
                       className={`font-bold text-xl ${
-                        item.type === "income"
-                          ? "text-green-600"
-                          : "text-red-600"
+                        item.type === 'income' ? 'text-green-600' : 'text-red-600'
                       }`}
                     >
-                      {item.type === "income" ? "+" : "-"}
+                      {item.type === 'income' ? '+' : '-'}
                       {item.amount.toLocaleString()} so'm
                     </h2>
 
@@ -163,20 +143,17 @@ function Dashboard() {
             <div className="flex flex-col gap-6 mt-5">
               {categories.map((category) => {
                 const total = data
-                  .filter(
-                    (item) =>
-                      item.type === "expense" && item.category === category,
-                  )
-                  .reduce((sum, item) => sum + item.amount, 0);
+                  .filter((item) => item.type === 'expense' && item.category === category)
+                  .reduce((sum, item) => sum + item.amount, 0)
 
-                const progress = (total / limit) * 100;
+                const progress = (total / limit) * 100
 
                 const colors = {
-                  Ovqat: "bg-blue-500",
-                  Transport: "bg-green-500",
-                  "To'lovlar": "bg-orange-500",
-                  Shopping: "bg-purple-500",
-                };
+                  Ovqat: 'bg-blue-500',
+                  Transport: 'bg-green-500',
+                  "To'lovlar": 'bg-orange-500',
+                  Shopping: 'bg-purple-500',
+                }
 
                 return (
                   <div key={category}>
@@ -189,7 +166,7 @@ function Dashboard() {
                     <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         className={`${
-                          colors[category] || "bg-gray-500"
+                          colors[category] || 'bg-gray-500'
                         } h-full rounded-full transition-all duration-500`}
                         style={{
                           width: `${Math.min(progress, 100)}%`,
@@ -197,14 +174,14 @@ function Dashboard() {
                       />
                     </div>
                   </div>
-                );
+                )
               })}
             </div>
           </div>
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard
